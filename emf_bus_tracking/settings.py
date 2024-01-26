@@ -101,6 +101,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+CELERY_RESULT_BACKEND = "rpc://"
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+CELERY_TASK_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["json"]
+
 CELERY_BEAT_SCHEDULE = {
     "gtfs-rt": {
         "task": "tracking.gtfs_rt_tasks.generate_gtfs_rt",
