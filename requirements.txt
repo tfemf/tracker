@@ -1,0 +1,7 @@
+Django
+celery
+django-colorfield
+django-admin-sortable2
+grpcio-tools
+mypy-protobuf
+docker

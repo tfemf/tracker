@@ -1,0 +1,13 @@
+gtfs-to-html-data/
+media/
+schedule/
+venv/
+.dockerignore
+.gitignore
+build.sh
+celerybeat-schedule.db
+db.sqlite3
+Dockerfile
+gtfs-realtime.proto
+.idea/
+__pycache__/
