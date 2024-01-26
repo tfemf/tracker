@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = False
 
-ALLOWED_HOSTS = ["tracking.emfta.uk"]
+ALLOWED_HOSTS = ["tracking.tfemf.uk"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
