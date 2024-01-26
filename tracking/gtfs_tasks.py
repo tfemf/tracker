@@ -51,7 +51,9 @@ def generate_gtfs_schedule():
         write_feed_info_file(file, feed_version)
 
     output_zip.close()
-    default_storage.save('gtfs.zip', ContentFile(output_file.getbuffer()))
+    with default_storage.open('gtfs.zip') as f:
+        f.write(output_file.getbuffer())
+
     generate_schedule_html.delay()
 
 

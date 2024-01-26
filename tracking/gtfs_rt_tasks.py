@@ -27,7 +27,8 @@ def generate_gtfs_rt():
     add_alerts(output_message)
     add_vehicle_positions(output_message)
 
-    default_storage.save('gtfs-rt.pb', ContentFile(output_message.SerializeToString()))
+    with default_storage.open('gtfs-rt.pb') as f:
+        f.write(output_message.SerializeToString())
 
 
 def add_alerts(msg: gtfs_realtime_pb2.FeedMessage):
