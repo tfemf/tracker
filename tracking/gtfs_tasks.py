@@ -63,11 +63,11 @@ def generate_schedule_html():
     client = docker.from_env()
 
     client.containers.run(settings.GTFS_TO_HTML_DOCKER, auto_remove=True, volumes={
-        str(settings.GTGS_TO_HTML_DATA_PATH): {
+        str(settings.GTFS_TO_HTML_DATA_PATH): {
             "bind": "/data",
             "mode": "rw"
         },
-        str(settings.GTGS_TO_HTML_OUTPUT_PATH): {
+        str(settings.GTFS_TO_HTML_OUTPUT_PATH): {
             "bind": "/html",
             "mode": "rw"
         }

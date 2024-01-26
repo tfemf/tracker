@@ -1,0 +1,14 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+    <h1>Import KML</h1>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="module">
+            <label for="kml_file">KML file</label>
+            <input type="file" name="kml_file" id="kml_file" required />
+        </fieldset>
+        <div class="submit-row">
+            <input type="submit" class="default" value="Submit" name="_save"/>
+        </div>
+    </form>
+{% endblock %}
