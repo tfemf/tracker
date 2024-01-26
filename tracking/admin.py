@@ -111,7 +111,7 @@ class ShapeAdmin(SortableAdminBase, admin.ModelAdmin):
                 parts = coordinate.split(',')
                 if len(parts) != 3:
                     raise ValidationError("Invalid coordinate")
-                lat, long, _ = parts
+                long, lat, _ = parts
                 lat = float(lat)
                 long = float(long)
                 models.ShapePoint.objects.create(
