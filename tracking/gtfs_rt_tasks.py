@@ -77,6 +77,26 @@ def add_alerts(msg: gtfs_realtime_pb2.FeedMessage, msg_json: dict):
                 gtfs_realtime_pb2.Alert.SeverityLevel.UNKNOWN_SEVERITY,
             )
         ))
+        msg_json["alerts"].append({
+            "id": str(alert.id),
+            "active_period": list(map(lambda p: {
+                "start": p.start.isoformat() if p.start else None,
+                "end": p.end.isoformat() if p.end else None,
+            }, alert.periods.all())),
+            "informed_entity": list(map(lambda e: {
+                "route_id": str(e.route.id) if e.route else None,
+                "trip": {
+                    "trip_id": str(e.journey.id)
+                } if e.journey else None,
+                "stop_id": str(e.stop.id) if e.stop else None,
+            }, alert.selectors.all())),
+            "cause": alert.get_cause_display() if alert.cause else None,
+            "effect": alert.get_effect_display() if alert.effect else None,
+            "severity_level": alert.get_severity_display() if alert.severity else None,
+            "url": alert.url if alert.url else None,
+            "header_text": alert.header if alert.header else None,
+            "description_text": alert.description if alert.description else None,
+        })
 
 
 def add_vehicle_positions(msg: gtfs_realtime_pb2.FeedMessage, msg_json: dict):
