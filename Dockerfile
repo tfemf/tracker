@@ -11,3 +11,5 @@ RUN pip install -r requirements.txt
 USER app:app
 
 COPY . /app
+
+CMD [ "/app/entrypoint.sh" ]
