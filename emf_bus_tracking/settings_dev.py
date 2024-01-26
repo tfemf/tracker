@@ -158,6 +158,6 @@ GTFS_CONFIG = {
     }
 }
 
-GTGS_TO_HTML_DATA_PATH = BASE_DIR / "gtfs-to-html-data"
-GTGS_TO_HTML_OUTPUT_PATH = BASE_DIR / "schedule"
+GTFS_TO_HTML_DATA_PATH = BASE_DIR / "gtfs-to-html-data"
+GTFS_TO_HTML_OUTPUT_PATH = BASE_DIR / "schedule"
 GTFS_TO_HTML_DOCKER = "theenbyperor/emf-gtfs-to-html:1"
