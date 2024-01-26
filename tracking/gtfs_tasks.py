@@ -62,16 +62,12 @@ def generate_gtfs_schedule():
 def generate_schedule_html():
     client = docker.from_env()
 
-    data_dir = settings.BASE_DIR / "gtfs-to-html-data"
-    schedule_dir = settings.BASE_DIR / "schedule"
-    os.makedirs(data_dir, exist_ok=True)
-    os.makedirs(schedule_dir, exist_ok=True)
     client.containers.run(settings.GTFS_TO_HTML_DOCKER, auto_remove=True, volumes={
-        str(data_dir): {
+        str(settings.GTGS_TO_HTML_DATA_PATH): {
             "bind": "/data",
             "mode": "rw"
         },
-        str(schedule_dir): {
+        str(settings.GTGS_TO_HTML_OUTPUT_PATH): {
             "bind": "/html",
             "mode": "rw"
         }
