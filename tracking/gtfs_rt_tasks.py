@@ -1,4 +1,4 @@
-from django.core.files.base import ContentFile
+import json
 from django.utils import timezone
 import emf_bus_tracking.celery
 from django.core.files.storage import default_storage
@@ -23,15 +23,24 @@ def generate_gtfs_rt():
             timestamp=int(now.timestamp()),
         )
     )
+    output_message_json = {
+        "header": {
+            "timestamp": int(now.timestamp()),
+        },
+        "alerts": [],
+        "vehicle_positions": []
+    }
 
-    add_alerts(output_message)
-    add_vehicle_positions(output_message)
+    add_alerts(output_message, output_message_json)
+    add_vehicle_positions(output_message, output_message_json)
 
     with default_storage.open('gtfs-rt.pb', "wb") as f:
         f.write(output_message.SerializeToString())
+    with default_storage.open('gtfs-rt.json', "w") as f:
+        json.dump(output_message_json, f)
 
 
-def add_alerts(msg: gtfs_realtime_pb2.FeedMessage):
+def add_alerts(msg: gtfs_realtime_pb2.FeedMessage, msg_json: dict):
     for alert in models.ServiceAlert.objects.all():
         msg.entity.append(gtfs_realtime_pb2.FeedEntity(
             id=str(alert.id),
@@ -70,7 +79,7 @@ def add_alerts(msg: gtfs_realtime_pb2.FeedMessage):
         ))
 
 
-def add_vehicle_positions(msg: gtfs_realtime_pb2.FeedMessage):
+def add_vehicle_positions(msg: gtfs_realtime_pb2.FeedMessage, msg_json: dict):
     cutoff = timezone.now() - timezone.timedelta(minutes=15)
 
     for vehicle in models.Vehicle.objects.all():
@@ -91,3 +100,16 @@ def add_vehicle_positions(msg: gtfs_realtime_pb2.FeedMessage):
                     timestamp=int(last_position.timestamp.timestamp()),
                 )
             ))
+            msg_json["vehicle_positions"].append({
+                "id": str(last_position.id),
+                "vehicle": {
+                    "id": str(vehicle.id),
+                    "label": vehicle.name,
+                    "license_plate": vehicle.registration_plate,
+                },
+                "position": {
+                    "latitude": last_position.latitude,
+                    "longitude": last_position.longitude,
+                },
+                "timestamp": int(last_position.timestamp.timestamp()),
+            })

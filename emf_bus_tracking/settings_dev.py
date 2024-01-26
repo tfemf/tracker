@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "celery",
     "colorfield",
+    "corsheaders",
     "adminsortable2",
     "tracking",
 ]
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -161,3 +163,5 @@ GTFS_CONFIG = {
 GTFS_TO_HTML_DATA_PATH = BASE_DIR / "gtfs-to-html-data"
 GTFS_TO_HTML_OUTPUT_PATH = BASE_DIR / "schedule"
 GTFS_TO_HTML_DOCKER = "theenbyperor/emf-gtfs-to-html:1"
+
+CORS_ALLOW_ALL_ORIGINS = True

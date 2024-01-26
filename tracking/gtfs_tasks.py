@@ -1,10 +1,9 @@
-import os
+import json
 import uuid
 import zipfile
 import csv
 import io
 import docker
-from django.core.files.base import ContentFile
 from django.utils import timezone
 from django.conf import settings
 from celery import shared_task
@@ -22,6 +21,9 @@ def generate_gtfs_schedule():
 
     output_file = io.BytesIO()
     output_zip = zipfile.ZipFile(output_file, 'w', zipfile.ZIP_DEFLATED, strict_timestamps=False)
+    output_json = {
+        "routes": []
+    }
 
     with output_zip.open("agency.txt", "w") as file:
         write_agency_file(file)
@@ -30,7 +32,7 @@ def generate_gtfs_schedule():
         write_stops_file(file)
 
     with output_zip.open("routes.txt", "w") as file:
-        write_routes_file(file)
+        write_routes_file(file, output_json)
 
     with output_zip.open("trips.txt", "w") as file:
         write_trips_file(file)
@@ -53,6 +55,8 @@ def generate_gtfs_schedule():
     output_zip.close()
     with default_storage.open('gtfs.zip', "wb") as f:
         f.write(output_file.getbuffer())
+    with default_storage.open('gtfs.json', "w") as f:
+        json.dump(output_json, f)
 
     generate_schedule_html.delay()
 
@@ -143,7 +147,7 @@ def write_stops_file(file):
             })
 
 
-def write_routes_file(file):
+def write_routes_file(file, output_json: dict):
     with io.TextIOWrapper(file, encoding='utf-8', newline='') as text_file:
         csv_file = csv.DictWriter(text_file, fieldnames=[
             "route_id",
@@ -162,7 +166,7 @@ def write_routes_file(file):
         ])
         csv_file.writeheader()
 
-        for route in models.Route.objects.all():
+        for route in models.Route.objects.all().order_by('order'):
             csv_file.writerow({
                 "route_id": str(route.id),
                 "agency_id": settings.GTFS_CONFIG["agency"]["id"],
@@ -177,6 +181,16 @@ def write_routes_file(file):
                 "continuous_pickup": "",
                 "continuous_drop_off": "",
                 "network_id": "",
+            })
+            output_json["routes"].append({
+                "id": str(route.id),
+                "agency_id": settings.GTFS_CONFIG["agency"]["id"],
+                "name": route.name,
+                "desc": route.description,
+                "type": route.type,
+                "url": route.url,
+                "color": route.color,
+                "text_color": route.text_color,
             })
 
 
