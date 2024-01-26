@@ -6,3 +6,4 @@ grpcio-tools
 mypy-protobuf
 docker
 gunicorn
+psycopg2-binary
