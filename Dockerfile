@@ -3,7 +3,7 @@ FROM python:3.11
 ARG DOCKER_GID=996
 
 RUN groupadd -g ${DOCKER_GID} docker \
-    &&  useradd -u 1000 -g 1000 -m -s /bin/bash app \
+    &&  useradd -u 1000 -m -s /bin/bash app \
     && usermod -aG docker app
 
 RUN mkdir /app
@@ -13,7 +13,7 @@ RUN pip install -U pip
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 
-USER app:app
+USER app:docker
 
 COPY . /app
 
