@@ -92,6 +92,9 @@ class VehiclePosition(models.Model):
     def __str__(self):
         return f"{self.vehicle} - {self.timestamp}"
 
+    class Meta:
+        ordering = ['-timestamp']
+
 
 class Journey(models.Model):
     DIRECTION_INBOUND = 0

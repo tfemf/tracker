@@ -16,9 +16,13 @@ class StopAdmin(admin.ModelAdmin):
     pass
 
 
+class VehiclePositionAdmin(admin.TabularInline):
+    model = models.VehiclePosition
+
+
 @admin.register(models.Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
-    pass
+    inlines = [VehiclePositionAdmin]
 
 
 @admin.register(models.Route)
