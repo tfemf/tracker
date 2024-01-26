@@ -1,7 +1,12 @@
 FROM python:3.11
 
+ARG DOCKER_GID=996
+
+RUN groupadd -g ${DOCKER_GID} docker \
+    &&  useradd -u 1000 -g 1000 -m -s /bin/bash app \
+    && usermod -aG docker app
+
 RUN mkdir /app
-RUN useradd app
 WORKDIR /app
 RUN pip install -U pip
 
